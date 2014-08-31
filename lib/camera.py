@@ -34,8 +34,8 @@ class PIC:
         self.camera.capture(stream, format='jpeg')
         data = np.fromstring(stream.getvalue(), dtype=np.uint8)
         image = cv2.imdecode(data, 1)
-        sobel = cv2.Sobel(image,cv2.CV_64F,0,1,ksize=5)
-        cv2.imwrite(filename,sobel)
+        blur = cv2.medianBlur(image,1)
+        cv2.imwrite(filename,blur)
         return filename
 
 
@@ -43,14 +43,14 @@ class PIC:
     def get_raw_picture(self):
         self.camera.resolution = (int(self._config['resolution_x']), int(self._config['resolution_y']))
         filename = self.__getNextFileNameImageRaw(self._config['directory'])
-        self.camera.capture(filename, 'rgb',False)
+        self.camera.capture(filename, 'rgb',False,bayer=True)
         return filename
 
     @open_close_camera
     def get_video(self):
-        filename = __getNextFileNameVideo(self._config['directory'])
+        filename = self.__getNextFileNameVideo(self._config['directory'])
         self.camera.start_recording(filename)
-        self.camera.wait_recording(self._config['wait_recording'])
+        self.camera.wait_recording(int(self._config['wait_recording']))
         self.camera.stop_recording()
         return filename
 

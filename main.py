@@ -3,7 +3,7 @@ from lib.camera import *
 from lib.switches import * 
 
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, jsonify
 
 import time
 
@@ -28,7 +28,12 @@ def show_entries():
 def do_photo():
     filename = pic.get_picture()
     filename = filename.replace(conf.get_dictionary()['directory']+"/","")
-    return render_template('image.html', path=filename)
+#    return render_template('image.html', path=filename)
+
+    data = {'filename': filename}
+    resp = jsonify(data)
+    resp.status_code =200
+    return resp
 
 @app.route('/take_cv')
 def do_cv2():
