@@ -22,7 +22,7 @@ def show_entries():
     filelist = filter(lambda x: not os.path.isdir(x), filelist)
     newest = max(filelist, key=lambda x: os.stat(x).st_mtime)
 
-    return render_template('index.html', path=newwest)
+    return render_template('index.html', path=newest)
 
 @app.route('/take_photo')
 def do_photo():
@@ -48,4 +48,5 @@ def do_video():
     return render_template('video.html', path=filename)
 
 if __name__ == '__main__':
+    app.debug = True
     app.run(host="0.0.0.0")
